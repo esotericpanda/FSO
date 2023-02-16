@@ -10,7 +10,7 @@ sequenceDiagram
     server-->>browser: 302 FOUND /exampleapp/notes [REDIRECTION]
     deactivate server
     
-    Note right of browser: The remaining steps are the same as when loading the page
+    Note right of browser: browser reloads the page so the remaining steps are the same as when loading the page
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
