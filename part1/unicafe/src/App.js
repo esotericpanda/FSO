@@ -6,6 +6,10 @@ const Button = ({text, onClick})=>(
   </button>
 )
 
+const StatisticLine = ({text, value})=>(
+  <p>{text} {value}</p>
+)
+
 const Statistics = ({good,neutral, bad})=>{
   const total = good + neutral + bad
 
@@ -17,19 +21,19 @@ const Statistics = ({good,neutral, bad})=>{
       </div>
     )
   }
-  
+
   const average = (good-bad)/(total) 
   const positivePercent = (100*good)/(total)
 
   return(
     <div>
       <h1>Statistics</h1>
-      <p>good: {good}</p>
-      <p>neutral: {neutral}</p>
-      <p>bad: {bad}</p>
-      <p>total: {total}</p>
-      <p>average: {average}</p>
-      <p>positive: {positivePercent}%</p>
+      <StatisticLine text="good" value ={good} />
+      <StatisticLine text="neutral" value ={neutral} />
+      <StatisticLine text="bad" value ={bad} />
+      <StatisticLine text="total" value ={total} />
+      <StatisticLine text="average" value ={average} />
+      <StatisticLine text="positive" value ={positivePercent+"%"} />
     </div>
   )
 }
