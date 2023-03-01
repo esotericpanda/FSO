@@ -30,6 +30,28 @@ const Person = ({ person, deletePerson }) => (
 )
 
 
+const Message = ({msg, good})=>{
+  if(msg===null){
+    return null
+  }
+
+  const msgStyle = {
+    color: good ? 'green' : 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  }
+  return(
+    <div  style={msgStyle}>
+      {msg}
+    </div>
+  )
+}
+
+
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -46,6 +68,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   const [toMatch, setToMatch] = useState('')
+
+
+  const [addedMsg, setAddedMsg] = useState(null)
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -90,7 +115,11 @@ const App = () => {
 
     personService
       .addPerson(newPerson)
-      .then(res => { setPersons(persons.concat(res)) })
+      .then(res => {
+        setPersons(persons.concat(res))
+        setAddedMsg(`Added person: ${res.name}`)
+        setTimeout(()=>{setAddedMsg(null)},5000)
+      })
 
 
     setNewName('')
@@ -118,6 +147,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Message msg={addedMsg} good={true}/>
       <Filter handler={handleFilterChange} toMatch={toMatch} />
       <h2>Add new</h2>
       <PersonForm submitPerson={submitPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
