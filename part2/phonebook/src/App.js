@@ -71,6 +71,7 @@ const App = () => {
 
 
   const [addedMsg, setAddedMsg] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -104,7 +105,13 @@ const App = () => {
       .then((res)=>{
         setPersons(persons.map(per=>per.id!==foundCopy.id ? per : res))
       })
-      
+      .catch(()=>{
+        setErrorMsg(`Information of ${foundCopy.name} has been removed from the server`)
+        setTimeout(()=>{setErrorMsg(null)},5000)
+        setPersons(persons.filter(per=>per.id!==foundCopy.id))
+      })
+      setNewName('')
+      setNewNumber('')
       return
     }
 
@@ -148,6 +155,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Message msg={addedMsg} good={true}/>
+      <Message msg={errorMsg} good={false}/>
       <Filter handler={handleFilterChange} toMatch={toMatch} />
       <h2>Add new</h2>
       <PersonForm submitPerson={submitPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
