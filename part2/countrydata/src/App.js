@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 
-const CountryList = ({countries})=>
+const CountryList = ({countries, setChosenCountry})=>
 <div>
-        {countries.map(ctr=><div key={ctr.alpha3Code}>{ctr.name}</div>)}
+        {countries.map(ctr=><div key={ctr.alpha3Code}>
+          {ctr.name} <button onClick={()=>{setChosenCountry(ctr)}}>show</button>
+          </div>)}
 </div>
 
 const CountryPanel = ({country})=>{
@@ -21,16 +23,29 @@ const CountryPanel = ({country})=>{
       <div>Name: {country.name}</div>
       <div>Population: {country.population}</div>
       <div>Area: {country.area}</div>
-      <img src={`data:image/svg+xml;utf8,${encodeURIComponent(flag)}`} />
+      {flag ? <img src={`data:image/svg+xml;utf8,${encodeURIComponent(flag)}`} />: ''}
     </div>
   )
 }
 
 const MainContent =({countries})=>{
+
+  const [chosenCountry, setChosenCountry] = useState(null);
+
+  if(chosenCountry){
+    return(
+      <div>
+        <button onClick={()=>{setChosenCountry(null)}}>return</button>
+        <CountryPanel country={chosenCountry}/>
+      </div>
+    )
+  }
+
+
   if(countries.length === 1){
     return <CountryPanel country={countries[0]}/>
   }else if (countries.length <= 10 ){
-    return <CountryList countries={countries}/>
+    return <CountryList countries={countries} setChosenCountry={setChosenCountry}/>
   }else{
     return <div>Too many matching countries</div>
   }
