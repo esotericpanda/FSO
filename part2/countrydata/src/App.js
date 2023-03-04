@@ -107,17 +107,6 @@ function App() {
     
   },[])
   
-  // useEffect(()=>{
-  //   console.log(api_key)
-  //   axios
-  //   .get(`http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=${api_key}`)
-  //   .then((res)=>{
-  //     const lat = res.data[0].lat
-  //     const lon= res.data[0].lon
-  //     return axios
-  //     .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`)
-  //   }).then(res=>{console.log(res.data)})
-  // },[])
 
 
   const countriesToShow = name
