@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const api_key = process.env.REACT_APP_API_KEY
 
 const CountryList = ({countries, setChosenCountry})=>
 <div>
@@ -8,6 +9,40 @@ const CountryList = ({countries, setChosenCountry})=>
           {ctr.name} <button onClick={()=>{setChosenCountry(ctr)}}>show</button>
           </div>)}
 </div>
+
+
+const WeatherPanel = ({country})=>{
+
+  const [weather, setWeather] = useState(null)
+
+  useEffect(()=>{
+    console.log('calling API')
+    axios
+    .get(`http://api.openweathermap.org/geo/1.0/direct?q=${country.capital}&limit=5&appid=${api_key}`)
+    .then((res)=>{
+      const lat = res.data[0].lat
+      const lon= res.data[0].lon
+      return axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`)
+    }).then(res=>{
+      setWeather(res.data)
+    })
+  },[])
+
+  if(weather){
+    return(
+      <div>
+        <h1>Weather in {country.capital}</h1>
+        temperature: {weather.main.temp} <br/>
+        min: {weather.main.temp_min} max: {weather.main.temp_min}<br/>
+        wind speed: {weather.wind.speed}<br/>
+        <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} />
+      </div>
+    )
+  }else{
+    return null
+  }
+}
 
 const CountryPanel = ({country})=>{
   const [flag, setFlag] = useState('');
@@ -17,13 +52,23 @@ const CountryPanel = ({country})=>{
     .get(country.flag)
     .then(res=>setFlag(res.data))
   },[])
+
+
   
   return(
     <div>
-      <div>Name: {country.name}</div>
+      <h1>{country.name}</h1>
       <div>Population: {country.population}</div>
       <div>Area: {country.area}</div>
-      {flag ? <img src={`data:image/svg+xml;utf8,${encodeURIComponent(flag)}`} />: ''}
+      <div>Capital: {country.capital}</div>
+      <div>
+        Languages:
+        <ul>
+        {country.languages.map(l=><li key={l.name}>{l.name}</li>)}
+        </ul>
+      </div>
+      {flag ? <img src={`data:image/svg+xml;utf8,${encodeURIComponent(flag)}`}  style={{ borderStyle: 'solid', maxWidth: 200}} />: ''}
+      <WeatherPanel country={country}/>
     </div>
   )
 }
@@ -62,6 +107,17 @@ function App() {
     
   },[])
   
+  // useEffect(()=>{
+  //   console.log(api_key)
+  //   axios
+  //   .get(`http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=${api_key}`)
+  //   .then((res)=>{
+  //     const lat = res.data[0].lat
+  //     const lon= res.data[0].lon
+  //     return axios
+  //     .get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`)
+  //   }).then(res=>{console.log(res.data)})
+  // },[])
 
 
   const countriesToShow = name
